@@ -472,6 +472,15 @@ variables.""",
                integer_arithmetic=True)
 
 
+QF_LIRA = Logic(name="QF_LIRA",
+                description=\
+"""Unquantified linear integer arithmetic with uninterpreted sort and
+function symbols.""",
+                quantifier_free=True,
+                integer_arithmetic=True,
+                real_arithmetic=True)
+
+
 QF_LRA = Logic(name="QF_LRA",
                description=\
 """Unquantified linear real arithmetic. In essence, Boolean
@@ -546,6 +555,16 @@ function symbols.""",
                  quantifier_free=True,
                  integer_arithmetic=True,
                  uninterpreted=True)
+
+
+QF_UFLIRA = Logic(name="QF_UFLIRA",
+                  description=\
+"""Unquantified linear integer arithmetic with uninterpreted sort and
+function symbols.""",
+                  quantifier_free=True,
+                  integer_arithmetic=True,
+                  real_arithmetic=True,
+                  uninterpreted=True)
 
 
 QF_UFLRA = Logic(name="QF_UFLRA",
@@ -638,6 +657,7 @@ SMTLIB2_LOGICS = frozenset([ AUFLIA,
                              QF_BV,
                              QF_IDL,
                              QF_LIA,
+                             QF_LIRA,
                              QF_LRA,
                              QF_NIA,
                              QF_NRA,
@@ -646,6 +666,7 @@ SMTLIB2_LOGICS = frozenset([ AUFLIA,
                              QF_UFBV ,
                              QF_UFIDL,
                              QF_UFLIA,
+                             QF_UFLIRA,
                              QF_UFLRA,
                              QF_UFNRA,
                              QF_UFNIA,
