@@ -17,6 +17,7 @@
 #
 import functools
 import itertools
+import re
 
 from warnings import warn
 from collections import deque
@@ -305,6 +306,8 @@ class Tokenizer(object):
 
 # EOC Tokenizer
 
+NUMERAL_PATTERN = re.compile("[1-9][0-9]*|0")
+DECIMAL_PATTERN = re.compile("([1-9][0-9]*|0)\.[0-9]+")
 
 class SmtLibParser(object):
     """Parse an SmtLib file and builds an SmtLibScript object.
@@ -654,27 +657,19 @@ class SmtLibParser(object):
                 val = token[1:-1]
                 val = val.replace('""', '"')
                 res = mgr.String(val)
+            elif NUMERAL_PATTERN.fullmatch(token):
+                # Numeral
+                if self.logic is None or \
+                   self.logic.theory.integer_arithmetic:
+                    res = mgr.Int(int(token))
+                else:
+                    res = mgr.Real(Fraction(token))
+            elif DECIMAL_PATTERN.fullmatch(token):
+                # Decimal
+                res = mgr.Real(Fraction(token))
             else:
-                # it could be a number or a string
-                try:
-                    frac = Fraction(token)
-                    if frac.denominator == 1:
-                        # We found an integer, depending on the logic this can be
-                        # an Int or a Real
-                        if self.logic is None or \
-                           self.logic.theory.integer_arithmetic:
-                            if "." in token:
-                                res = mgr.Real(frac)
-                            else:
-                                res = mgr.Int(frac.numerator)
-                        else:
-                            res = mgr.Real(frac)
-                    else:
-                        res = mgr.Real(frac)
-
-                except ValueError:
-                    # a string constant
-                    res = token
+                # a symbolic token
+                res = token
             self.cache.bind(token, res)
         return res
 
